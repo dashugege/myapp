@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home/home_tab1.dart';
-import 'home/home_tab2.dart';
-import 'home/home_tab3.dart';
+import 'home/Home_tab1.dart';
+import 'home/Home_tab2.dart';
+import 'home/Home_tab3.dart';
 
 class Tab1 extends StatefulWidget {
   @override
@@ -20,9 +20,9 @@ class _Tab1State extends State<Tab1> with SingleTickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _listController = [
-      home_tab1(),
-      home_tab2(),
-      home_tab3(),
+      Home_tab1(),
+      Home_tab2(),
+      Home_tab3(),
     ];
   }
 
@@ -32,10 +32,12 @@ class _Tab1State extends State<Tab1> with SingleTickerProviderStateMixin {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+            centerTitle: true,
             title: Text('tab1'),
             bottom: TabBar(
                 controller: _tabController,
                 tabs: tabs.map((e) => Tab(text: e)).toList())),
+
         body: TabBarView(children: _listController,controller: _tabController,),
       ),
 

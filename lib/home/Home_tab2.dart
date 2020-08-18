@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 
-class home_tab1 extends StatefulWidget {
+class Home_tab2 extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+    return Home_tab2_state();
 
-    return home_tab1_state();
   }
 
 }
 
 
-class home_tab1_state extends State<home_tab1>{
+class Home_tab2_state extends State<Home_tab2>{
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Text('home_tab1_state');
+    return Text('home_tab2_state');
   }
 
 }

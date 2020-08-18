@@ -52,4 +52,13 @@ class _TabMainState extends State<TabMain> with SingleTickerProviderStateMixin {
   }
 
   _bottomNavigationBar() {}
+
+
+  //页面销毁时，销毁控制器
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+    print('dispose');
+  }
 }
