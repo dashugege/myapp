@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:myapp/api/DioLogInterceptor.dart';
 import 'BaseEntity.dart';
 import 'ErrorEntity.dart';
-
-//  https://juejin.im/post/6844903708757590024
+import 'dart:convert';
 
 class DioManager {
   static DioManager _instance;
@@ -17,39 +19,65 @@ class DioManager {
   Dio _dio;
   DioManager._internal() {
     if (_dio == null) {
-      BaseOptions options = new BaseOptions(
+      _dio = Dio();
+      _dio.options = new BaseOptions(
         baseUrl: "http://www.soyoung.com/",
         contentType: 'application/json',
         responseType: ResponseType.json,
         sendTimeout: 20000,
         connectTimeout: 20000,
         receiveTimeout: 20000,
+        headers: {
+          'User-Agent':'dio',
+          'Connection':'keep-alive',
+          'Content-Type':'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin':'*',
+          'Access-Control-Allow-Headers': 'X-Requested-With',
+      }
       );
-      _dio = Dio(options);
+      _dio.interceptors.add(DioLogInterceptor());
     }
   }
 
   Future post<T>(String path,
       {Map params, Function(T) success, Function(ErrorEntity) error}) async {
     try {
-      Response response = await _dio.post(path,queryParameters: params);
-      if (response != null) {
-        BaseEntity entity = BaseEntity<T>.fromJson(response.data);
-        if (entity.code == 0) {
-          success(entity.data);
+      Response response = await _dio.post(path, queryParameters: params);
+      if (response != null && response.statusCode == HttpStatus.ok) {
+        BaseEntity entity = BaseEntity<T>.fromJson(json.decode(response.data));
+        if (entity.errorCode == 0) {
+          success(json.decode(entity.data));
         } else {
-          error(ErrorEntity(code: entity.code, message: entity.message));
+          error(ErrorEntity(
+              errorCode: entity.errorCode, errorMsg: entity.errorMsg));
         }
       } else {
-        error(ErrorEntity(code: -1, message: "未知错误"));
+        error(ErrorEntity(
+            errorCode: response.statusCode, errorMsg: 'unknow exception'));
       }
-    } on DioError catch (error) {
-      if (error != null) {
-        int errCode = error.response.statusCode;
-        String errMsg = error.response.statusMessage;
-        return ErrorEntity(code: errCode, message: errMsg);
-      }
+    } catch (err) {
+      error(ErrorEntity(errorCode: -1, errorMsg: err.toString()));
     }
   }
 
+  Future get<T>(String path,
+      {Map params, Function(T) success, Function(ErrorEntity) error}) async {
+    try {
+      Response response = await _dio.get(path, queryParameters: params);
+      if (response != null && response.statusCode == HttpStatus.ok) {
+        BaseEntity entity = BaseEntity<T>.fromJson(json.decode(response.data));
+        if (entity.errorCode == 0) {
+          success(json.decode(entity.data));
+        } else {
+          error(ErrorEntity(
+              errorCode: entity.errorCode, errorMsg: entity.errorMsg));
+        }
+      } else {
+        error(ErrorEntity(
+            errorCode: response.statusCode, errorMsg: 'unknow exception'));
+      }
+    } catch (err) {
+      error(ErrorEntity(errorCode: -1, errorMsg: err.toString()));
+    }
+  }
 }
