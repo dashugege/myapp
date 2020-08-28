@@ -52,9 +52,6 @@ class MainActivity: FlutterActivity() {
         return batteryLevel
     }
 
-    fun registerWith(registrar: Registrar) {
-        registrar.platformViewRegistry().registerViewFactory("webview",
-                WebViewFactory(registrar.messenger()))
-    }
+
 
 }
