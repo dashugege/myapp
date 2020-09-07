@@ -6,7 +6,9 @@ import 'package:myapp/demo/batteryplugwidget.dart';
 import 'package:myapp/demo/counterwidget.dart';
 import 'package:myapp/demo/raisedbuttonwidget.dart';
 import 'package:myapp/demo/rowcolumnwidget.dart';
+import 'package:myapp/demo/scrollviewwidget.dart';
 import 'package:myapp/demo/textfieldwidget.dart';
+import 'package:myapp/demo/willpopscopetestroute.dart';
 
 import 'routerdemo.dart';
 
@@ -71,6 +73,11 @@ class HomePage extends StatelessWidget {
                 return BatteryPlugWidget();
               }));
             }, child: Text('button rowcolumn'),textColor: Colors.blue,),
+            FlatButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return WillPopScopeTestRoute();
+              }));
+            }, child: Text('listview'),textColor: Colors.blue,),
           ],)
         )
     );
