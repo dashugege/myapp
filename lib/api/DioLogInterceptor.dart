@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 class DioLogInterceptor extends Interceptor {
   @override
   Future onRequest(RequestOptions options) async {
-    print("REQUEST[${options?.method}] => PATH: ${options?.path}");
+//    print("REQUEST[${options?.method}] => PATH: ${options?.path}");
     return options;
   }
 
