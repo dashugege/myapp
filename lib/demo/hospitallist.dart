@@ -17,7 +17,7 @@ class _HospitalListWidgetState extends State<HospitalListWidget> {
   void initState() {
     super.initState();
     dphospital = [];
-    getHospitalList();
+    _getHospitalList();
   }
 
   @override
@@ -71,11 +71,13 @@ class _HospitalListWidgetState extends State<HospitalListWidget> {
     );
   }
 
-  getHospitalList() {
-    ApiHelps().getHospitalList().then((value) => {
-          setState(() {
-            dphospital = value.responseData.dphospital;
-          })
-        });
+
+
+  _getHospitalList(){
+    ApiHelps().postHospitalList((success) => {
+      setState(() {
+        dphospital = success.responseData.dphospital;
+      })
+    });
   }
 }

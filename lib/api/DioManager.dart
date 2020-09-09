@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:myapp/api/DioLogInterceptor.dart';
+import 'package:myapp/api/baseentity.dart';
 
 class DioManager {
   static DioManager _instance;
@@ -38,45 +40,30 @@ class DioManager {
     }
   }
 
-  Future<Response> get(
-    String url,
-    Map<String, dynamic> params,
-  ) async {
-    try {
-      return await _dio.get(url, queryParameters: params);
-    } on DioError catch (e) {
-      if (e == null) {
-        return Future.error(Response(data: -1));
-      } else if (e.response != null) {
-        if (e.response.statusCode >= 300 && e.response.statusCode < 400) {
-          return Future.error(Response(data: -1));
-        } else {
-          return Future.value(e.response);
-        }
-      } else {
-        return Future.error(Response(data: -1));
-      }
-    }
-  }
 
-  Future<Response> post(
+
+  Future get(
       String url,
       Map<String, dynamic> params,
-      ) async {
+      Function(Map<String, dynamic>) success,
+      Function(Map<String, dynamic>) error) async {
     try {
-      return await _dio.post(url, queryParameters: params);
-    } on DioError catch (e) {
-      if (e == null) {
-        return Future.error(Response(data: -1));
-      } else if (e.response != null) {
-        if (e.response.statusCode >= 300 && e.response.statusCode < 400) {
-          return Future.error(Response(data: -1));
-        } else {
-          return Future.value(e.response);
-        }
-      } else {
-        return Future.error(Response(data: -1));
+      Response response = await _dio.get(url, queryParameters: params);
+      Map<String, dynamic> resultMap = json.decode(response.data);
+      BaseEntity baseEntity = BaseEntity.fromJson(resultMap);
+      if(baseEntity.errorCode == 0){
+        success(resultMap);
       }
+    } on DioError catch (e) {
+      var map = Map();
+      map['errorCode'] = 500;
+      map['errorMsg'] = 'net error';
+      if (e.response != null) {
+        if (e.response.statusCode != 0) {
+          map['errorCode'] = e.response.statusCode;
+        }
+      }
+      error(map);
     }
   }
 }
