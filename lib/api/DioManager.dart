@@ -66,4 +66,31 @@ class DioManager {
       error(map);
     }
   }
+
+
+
+  Future post(
+      String url,
+      Map<String, dynamic> params,
+      Function(Map<String, dynamic>) success,
+      Function(Map<String, dynamic>) error) async {
+    try {
+      Response response = await _dio.post(url, queryParameters: params);
+      Map<String, dynamic> resultMap = json.decode(response.data);
+      BaseEntity baseEntity = BaseEntity.fromJson(resultMap);
+      if(baseEntity.errorCode == 0){
+        success(resultMap);
+      }
+    } on DioError catch (e) {
+      var map = Map();
+      map['errorCode'] = 500;
+      map['errorMsg'] = 'net error';
+      if (e.response != null) {
+        if (e.response.statusCode != 0) {
+          map['errorCode'] = e.response.statusCode;
+        }
+      }
+      error(map);
+    }
+  }
 }

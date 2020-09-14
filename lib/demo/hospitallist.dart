@@ -6,6 +6,7 @@ import 'package:myapp/entity/hospital_list_entity.dart';
 class HospitalListWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+
     return _HospitalListWidgetState();
   }
 }
@@ -44,7 +45,6 @@ class _HospitalListWidgetState extends State<HospitalListWidget> {
                       ),
                     ),
                     Container(
-                      color: Colors.red,
                       child: Column(
                         children: [
                           Text(dphospital[index].nameCn),
